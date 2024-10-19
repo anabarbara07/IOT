@@ -1,0 +1,156 @@
+const char MAIN_page[] PROGMEM = R"=====(
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+        text-align: center;
+        top-margin: 100px;
+      }
+      h1 {
+        color: #333;
+      }
+      h2 {
+        color: #333;
+      }
+      p {
+        color: #333;
+      }
+      div {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 600px; /* Aumenta a largura máxima para caber as portas */
+      }
+      button {
+        background-color: #00CED1; 
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+      }
+      #isiStatusSER1 {
+        margin-top: 10px;
+        font-size: 16px;
+        color: #555;
+      }
+      .porta-container {
+        display: flex;
+        justify-content: space-between; /* Distribui os itens uniformemente */
+        margin: 20px 0; /* Margem vertical entre as seções das portas */
+      }
+      .porta {
+        display: flex;
+        flex-direction: column; /* Coloca os elementos em coluna */
+        align-items: center; /* Centraliza os elementos horizontalmente */
+      }
+    </style>
+  </head>
+  
+  <body>
+    <h1>TechHome</h1>
+    <h2>Bem vindo a sua casa!</h2>
+    <p>Controle-a como desejar.</p>
+    <br>
+    <center>
+    <div class="porta-container">
+      <div class="porta">
+        <label>Porta 1</label>
+        <button type="button" onclick="sendData2(3)">Abrir</button>
+        <button type="button" onclick="sendData2(4)">Fechar</button>
+      </div>
+      
+      <div class="porta">
+        <label>Porta 2</label>
+        <button type="button" onclick="sendData2(5)">Abrir</button>
+        <button type="button" onclick="sendData2(6)">Fechar</button>
+      </div>
+      
+      <div class="porta">
+        <label>Porta 3</label>
+        <button type="button" onclick="sendData2(7)">Abrir</button>
+        <button type="button" onclick="sendData2(8)">Fechar</button>
+      </div>
+    </div>
+    </center>
+
+    <label><span id="sensorChuva"></span></label>
+
+    <script>
+      function sendData(pos) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText);
+          }
+        };
+        xhttp.open("GET", "setPOS?servoPOS=" + pos, true);
+        xhttp.send();
+      } 
+      function sendData2(StatusSer1) { 
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) { 
+            document.getElementById("isiStatusSER1").innerHTML = this.responseText;     
+          }
+        };
+        xhttp.open("GET", "setSER1?SERstate1=" + StatusSer1, true);   
+        xhttp.send();
+      }
+
+      function getDataSER1() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("isiStatusSER1").innerHTML = this.responseText;
+          }
+        };
+        xhttp.open("PUT", "readSER1", true);    
+        xhttp.send();
+      }
+
+      function getDataSER2() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("issensorChuva").innerHTML = this.responseText;
+          }
+        };
+        xhttp.open("PUT", "readsensorChuva", true);    
+        xhttp.send();
+      }
+      
+      var slider = document.getElementById("myRange");
+      var output = document.getElementById("demo");
+      output.innerHTML = slider.value;
+      slider.oninput = function() {
+        output.innerHTML = this.value;
+        sendData(output.innerHTML);
+      }
+    </script>
+  </body>
+</html>
+)=====";[
